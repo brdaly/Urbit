@@ -1,0 +1,59 @@
+# CONNECT TO THE DROPLET
+    
+    ssh root@123.45.67.890
+
+
+  # CONFIGURE THE DROPLET & INSTALL URBIT
+    
+    sudo apt-get update
+    mkdir temp
+    curl -o temp/archive.tgz -O https://bootstrap.urbit.org/urbit-v0.10.7-linux64.tgz
+    tar xzf temp/archive.tgz -C temp/
+    rm temp/archive.tgz
+    chown -R root:root temp/urbit-v0.10.7-linux64/
+    mv temp/urbit-v0.10.7-linux64/* ./
+    rm -rf temp/
+    sudo fallocate -l 2G /swapfile
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+    sudo cp /etc/fstab /etc/fstab.bak
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+
+
+  # UPLOAD KEYFILE **run this command on your local machine**
+    
+    scp ~/Downloads/magmyr-darlex.key root@123.45.67.890:
+
+
+  # BOOT THE PLANET
+    
+    ./urbit -w magmyr-darlex -k magmyr-darlex.key
+
+
+  # SHUT DOWN THE PLANET & DELETE KEYFILE
+    
+    ctrl-d
+    shred -vzn 3 magmyr-darlex.key
+    rm magmyr-darlex.key
+
+
+  # CREATE SCREEN
+    
+    screen -S urbit-planet
+
+
+  # RE-START THE PLANET
+    
+    ./urbit magmyr-darlex
+
+
+  # GENERATE LANDSCAPE PASSCODE
+    
+    +code
+
+
+  # DETACH & DISCONNECT
+    
+    ctrl-a d
+    exit
